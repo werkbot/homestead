@@ -47,3 +47,59 @@ $ mkdir homestead && \
 ```
 
 After it's complete, `vendor/laravel/homestead` will be a git checkout and can be used normally.
+
+## Extensions
+### phpMyAdmin
+Map site in Homestead.yaml:
+
+    - map: phpmyadmin.local
+      to: /home/vagrant/phpmyadmin
+      php: '8.0'
+
+Add site to main machine hosts file
+
+	192.168.10.10           phpmyadmin.local
+
+Login:
+- user: homestead
+- password: secret
+
+## Config
+### Homestead.yaml
+
+    folders:
+        - map: 'C:/Users/YourUser/LaravelApps/sitename'
+          to: /home/vagrant/sitename
+    sites:
+        - map: sitename.local
+          to: /home/vagrant/sitename/public
+          php: '8.0'
+    databases:
+        - sitename
+    features:
+        - mysql: true
+
+### Start Homestead
+- Run `vagrant up --provision`
+- Run `vagrant ssh`
+
+### PHP
+- Run `sudo vi /etc/php/8.0/fpm/php.ini`
+- Change following values to 0:
+
+        upload_max_filesize 0
+        post_max_size 0
+        max_execution_time 0
+        max_input_time 0
+
+### Nginx
+- Run `sudo vi /etc/nginx/nginx.conf`
+- Add `client_max_body_size 0;` in http brackets
+- Run `sudo systemctl restart nginx`
+
+## PHP Versions
+### Composer
+- Run composer with different versions of PHP `php7.4 /usr/local/bin/composer update`
+
+### Artisan
+- Run artisan with different versions of PHP `php7.4 artisan migrate`

@@ -3,7 +3,6 @@
 phpunit.xml
 /Homestead.yaml
 /Homestead.json
-/after.sh
 /aliases
 /mysqldump.sql.gz
 /mysql_backup
@@ -13,3 +12,5 @@ phpunit.xml
 wsl-init.log
 .backup/*
 .DS_Store
+composer.lock
+

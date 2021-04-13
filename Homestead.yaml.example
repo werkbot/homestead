@@ -16,9 +16,11 @@ folders:
 sites:
     - map: homestead.test
       to: /home/vagrant/code/public
+      php: 7.3
 
 databases:
-    - homestead
+    - LV_example
+    - SS_example
 
 features:
     - mariadb: false
