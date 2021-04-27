@@ -77,7 +77,7 @@ Login:
     databases:
         - sitename
     features:
-        - mysql: true
+        - mariadb: true
 
 ### Start Homestead
 - Run `vagrant up --provision`

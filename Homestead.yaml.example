@@ -23,7 +23,7 @@ databases:
     - SS_example
 
 features:
-    - mariadb: false
+    - mariadb: true
     - postgresql: false
     - ohmyzsh: false
     - webdriver: false
