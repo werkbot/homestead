@@ -97,6 +97,47 @@ Login:
 - Add `client_max_body_size 0;` in http brackets
 - Run `sudo systemctl restart nginx`
 
+### Sendmail
+- Run `sudo apt-get install sendmail`
+- Run `sudo sendmailconfig` and answer yes to all
+- Run `sudo mkdir /etc/mail/authinfo/`
+- Run `cd /etc/mail/authinfo/`
+- Run `sudo vi gmail-auth`
+- Paste and edit `AuthInfo: "U:root" "I:developer@werkbot.com" "P:PASSWORD"`
+- Run `sudo makemap hash gmail-auth < gmail-auth`
+- Run `cd /` to navigate back
+- Run `sudo vi /etc/mail/sendmail.mc`
+- Paste the following right above the MAILER definitions
+
+        define(`SMART_HOST',`[smtp.gmail.com]')dnl
+        define(`RELAY_MAILER_ARGS', `TCP $h 587')dnl
+        define(`ESMTP_MAILER_ARGS', `TCP $h 587')dnl
+        define(`confAUTH_OPTIONS', `A p')dnl
+        TRUST_AUTH_MECH(`EXTERNAL DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl
+        define(`confAUTH_MECHANISMS', `EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl
+        FEATURE(`authinfo',`hash -o /etc/mail/authinfo/gmail-auth.db')dnl
+
+- Run `sudo make -C /etc/mail`
+- Run `sudo /etc/init.d/sendmail reload`
+- Send test email `echo "test message" | sendmail -v youremail@gmail.com`
+- Open the php.ini file for your project's php version. e.g. `sudo vi /etc/php/7.4/fpm/php.ini`
+- Set `SMTP = smtp.gmail.com`
+- Set `sendmail_from = developer@werkbot.com`
+- Set `sendmail_path = /usr/sbin/sendmail`
+- Run `sudo vi /etc/hosts`
+- Change:
+
+        127.0.0.1       localhost
+        127.0.1.1       homestead       homestead
+
+- To:
+
+        127.0.0.1       localhost.localdomain localhost homestead
+        127.0.1.1       homestead       homestead
+
+- Run `sudo systemctl restart nginx`
+- For SilverStripe, until I find a better solution, change vendor/swiftmailer/swiftmailer/lib/classes/Swift/MailTransport.php constructor default from `-f%s` to `-f %s`
+
 ## PHP Versions
 ### Composer
 - Run composer with different versions of PHP `php7.4 /usr/local/bin/composer update`
