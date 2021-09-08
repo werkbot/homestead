@@ -60,6 +60,8 @@ Login:
 - password: secret
 
 ## Config
+- Setup a key `ssh-keygen -t rsa -C "you@homestead"`
+
 ### Homestead.yaml
 
     folders:
@@ -79,18 +81,24 @@ Login:
 - Run `vagrant ssh`
 
 ### PHP
-- Run `sudo vi /etc/php/8.0/fpm/php.ini`
+- Run `sudo vi /etc/php/7.3/fpm/php.ini`
 - Change following values to 0:
 
-        upload_max_filesize 0
-        post_max_size 0
-        max_execution_time 0
-        max_input_time 0
+        upload_max_filesize = 0
+        post_max_size = 0
+        max_execution_time = 0
+        max_input_time = 0
 
 ### Nginx
 - Run `sudo vi /etc/nginx/nginx.conf`
 - Add `client_max_body_size 0;` in http brackets
 - Run `sudo systemctl restart nginx`
+
+### Disable xdebug (causes 502 error)
+- Run `sudo vi /etc/php/7.3/mods-available/xdebug.ini`
+- Add a `;` before each line
+- Run `sudo systemctl restart nginx`
+- Run `sudo service php7.3-fpm restart`
 
 ### Sendmail
 - Run `sudo apt-get install sendmail`
@@ -135,7 +143,7 @@ Login:
 
 ## PHP Versions
 ### Composer
-- Run composer with different versions of PHP `php7.4 /usr/local/bin/composer update`
+- Run composer with different versions of PHP `php7.3 /usr/local/bin/composer update`
 
 ### Artisan
-- Run artisan with different versions of PHP `php7.4 artisan migrate`
+- Run artisan with different versions of PHP `php7.3 artisan migrate`
