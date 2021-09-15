@@ -65,3 +65,22 @@ else
 	rm google-chrome-stable_current_amd64.deb
 fi
 # End Google Chrome
+
+
+
+# Check If PHP has been configured
+if [ -f /home/vagrant/.homestead-features/php ]
+then
+    echo "PHP already configured."
+else
+	touch /home/vagrant/.homestead-features/php
+	sudo chmod 777 /etc/php/7.3/fpm/php.ini
+	PHP_INI=$(cat /etc/php/7.3/fpm/php.ini)
+	PHP_INI=$(echo "$PHP_INI" | sed 's/upload_max_filesize =.*/upload_max_filesize = 0/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/post_max_size =.*/post_max_size = 0/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/max_execution_time =.*/max_execution_time = 0/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/max_input_time =.*/max_input_time = 0/')
+	sudo echo "$PHP_INI" > /etc/php/7.3/fpm/php.ini
+	sudo service php7.3-fpm restart
+fi
+# End PHP
