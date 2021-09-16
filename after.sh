@@ -84,3 +84,19 @@ else
 	sudo service php7.3-fpm restart
 fi
 # End PHP
+
+
+
+# Check If NGINX has been configured
+if [ -f /home/vagrant/.homestead-features/nginx ]
+then
+    echo "NGINX already configured."
+else
+	touch /home/vagrant/.homestead-features/nginx
+	sudo chmod 777 /etc/nginx/nginx.conf
+	NGINX_CONF=$(cat /etc/nginx/nginx.conf)
+	NGINX_CONF=$(echo "$NGINX_CONF" | sed 's/http {/http {\nclient_max_body_size 0;/')
+	sudo echo "$NGINX_CONF" > /etc/nginx/nginx.conf
+	sudo systemctl restart nginx
+fi
+# End NGINX
