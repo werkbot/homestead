@@ -14,6 +14,8 @@ customizationScriptPath = confDir + "/user-customizations.sh"
 restartPHPScriptPath = confDir + "/restart-php.sh"
 aliasesPath = confDir + "/aliases"
 
+envConf = YAML::load(File.read(confDir + "/env.yaml"))
+
 require File.expand_path(File.dirname(__FILE__) + '/scripts/homestead.rb')
 
 Vagrant.require_version '>= 2.2.4'
@@ -38,11 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     Homestead.configure(config, settings)
 
     if File.exist? afterScriptPath then
-        config.vm.provision "shell", path: afterScriptPath, privileged: false, keep_color: true
-    end
-
-    if File.exist? afterScriptPath then
-        config.vm.provision "shell", path: afterScriptPath, privileged: false, keep_color: true
+        config.vm.provision "shell", path: afterScriptPath, privileged: false, keep_color: true, env: {'MAILUSER' => envConf['MAILUSER'], 'MAILPASSWORD' => envConf['MAILPASSWORD']}
     end
 
     if File.exist? restartPHPScriptPath then

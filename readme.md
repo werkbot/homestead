@@ -123,7 +123,7 @@ Login:
 - Run `sudo make -C /etc/mail`
 - Run `sudo /etc/init.d/sendmail reload`
 - Send test email `echo "test message" | sendmail -v youremail@gmail.com`
-- Open the php.ini file for your project's php version. e.g. `sudo vi /etc/php/7.4/fpm/php.ini`
+- Open the php.ini file for your project's php version. e.g. `sudo vi /etc/php/7.3/fpm/php.ini`
 - Set `SMTP = smtp.gmail.com`
 - Set `sendmail_from = developer@werkbot.com`
 - Set `sendmail_path = /usr/sbin/sendmail`

@@ -80,6 +80,10 @@ else
 	PHP_INI=$(echo "$PHP_INI" | sed 's/post_max_size =.*/post_max_size = 0/')
 	PHP_INI=$(echo "$PHP_INI" | sed 's/max_execution_time =.*/max_execution_time = 0/')
 	PHP_INI=$(echo "$PHP_INI" | sed 's/max_input_time =.*/max_input_time = 0/')
+	# sendmail config
+	PHP_INI=$(echo "$PHP_INI" | sed 's/SMTP =.*/SMTP = smtp.gmail.com/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/;sendmail_from =.*/sendmail_from = developer@werkbot.com/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/;sendmail_path =.*/sendmail_path = \/usr\/sbin\/sendmail/')
 	sudo echo "$PHP_INI" > /etc/php/7.3/fpm/php.ini
 	sudo service php7.3-fpm restart
 fi
@@ -100,3 +104,39 @@ else
 	sudo systemctl restart nginx
 fi
 # End NGINX
+
+
+
+# Check If sendmail has been installed and configured
+if [ -f /home/vagrant/.homestead-features/sendmail ]
+then
+    echo "sendmail already configured."
+else
+	touch /home/vagrant/.homestead-features/sendmail
+	yes | sudo apt-get install sasl2-bin
+	yes | sudo apt-get install sendmail
+	yes | sudo sendmailconfig
+	sudo mkdir /etc/mail/authinfo
+	sudo chmod 777 /etc/mail/authinfo
+	sudo echo 'AuthInfo: "U:root" "I:'$MAILUSER'" "P:'$MAILPASSWORD'"' > /etc/mail/authinfo/gmail-auth
+	sudo makemap hash /etc/mail/authinfo/gmail-auth < /etc/mail/authinfo/gmail-auth
+	sudo chmod 777 /etc/mail/sendmail.mc
+	SENDMAILMC=$(cat /etc/mail/sendmail.mc)
+	NEWSENDMAILMCSETTINGS=$(echo -e "\ndefine(\`SMART_HOST',\`[smtp.gmail.com]')dnl\ndefine(\`RELAY_MAILER_ARGS', \`TCP \$h 587')dnl\ndefine(\`ESMTP_MAILER_ARGS', \`TCP \$h 587')dnl\ndefine(\`confAUTH_OPTIONS', \`A p')dnl\nTRUST_AUTH_MECH(\`EXTERNAL DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl\ndefine(\`confAUTH_MECHANISMS', \`EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl\nFEATURE(\`authinfo',\`hash -o /etc/mail/authinfo/gmail-auth.db')dnl")
+	SENDMAILMC="${SENDMAILMC}${NEWSENDMAILMCSETTINGS}"
+	SENDMAILMC=$(echo "$SENDMAILMC" | sed 's/MAILER_DEFINITIONS/dnl #/')
+	SENDMAILMC=$(echo "$SENDMAILMC" | sed 's/MAILER(`local.*/dnl #/')
+	SENDMAILMC=$(echo "$SENDMAILMC" | sed 's/MAILER(`smtp.*/dnl #/')
+	MAILERDEFINITIONS=$(echo -e "\nMAILER_DEFINITIONS\nMAILER(\`local')dnl\nMAILER(\`smtp')dnl")
+	SENDMAILMC="${SENDMAILMC}${MAILERDEFINITIONS}"
+	sudo echo "$SENDMAILMC" > /etc/mail/sendmail.mc
+	sudo make -C /etc/mail
+	sudo /etc/init.d/sendmail reload
+	yes | sudo sendmailconfig
+	sudo chmod 777 /etc/hosts
+	HOSTS=$(cat /etc/hosts)
+	HOSTS=$(echo "$HOSTS" | sed 's/localhost/localhost\.localdomain localhost homestead/')
+	sudo echo "$HOSTS" > /etc/hosts
+	sudo systemctl restart nginx
+fi
+# End sendmail
