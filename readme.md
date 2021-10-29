@@ -64,6 +64,29 @@ Login:
 - Send test email `echo "test message" | sendmail -v youremail@gmail.com` (this could take several minutes to receive)
 - For SilverStripe, until I find a better solution, change vendor/swiftmailer/swiftmailer/lib/classes/Swift/MailTransport.php constructor default from `-f%s` to `-f %s`
 
+### apache2
+- Used for 301 redirects
+- Disable nginx `sudo systemctl stop nginx`
+- `sudo vi /etc/apache2/apache2.conf`
+- Update `<Directory />` block
+
+        <Directory />
+                Options FollowSymLinks
+                AllowOverride All
+                Require all granted
+        </Directory>
+
+- Add site conf `sudo vi /etc/apache2/sites-available/sitename.local.conf`
+
+        <VirtualHost *:80>
+            ServerAdmin email@email.com
+            DocumentRoot /home/vagrant/sitename/public
+            ServerName sitename.local
+        </VirtualHost>
+
+- Add symlink to sites-enabled `sudo ln -s /etc/apache2/sites-available/sitename.local.conf /etc/apache2/sites-enabled/sitename.local.conf`
+- Restart apache `sudo systemctl restart apache2`
+
 ## Config
 - Setup a key `ssh-keygen -t rsa -C "you@homestead"`
 
