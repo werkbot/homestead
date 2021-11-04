@@ -81,9 +81,8 @@ else
 	PHP_INI=$(echo "$PHP_INI" | sed 's/max_execution_time =.*/max_execution_time = 0/')
 	PHP_INI=$(echo "$PHP_INI" | sed 's/max_input_time =.*/max_input_time = 0/')
 	# sendmail config
-	PHP_INI=$(echo "$PHP_INI" | sed 's/SMTP =.*/SMTP = smtp.gmail.com/')
-	PHP_INI=$(echo "$PHP_INI" | sed 's/;sendmail_from =.*/sendmail_from = developer@werkbot.com/')
-	PHP_INI=$(echo "$PHP_INI" | sed 's/;sendmail_path =.*/sendmail_path = \/usr\/sbin\/sendmail/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/;mail.force_extra_parameters =.*/mail.force_extra_parameters = "-f %s"/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/mail.add_x_header = Off/mail.add_x_header = On/')
 	sudo echo "$PHP_INI" > /etc/php/7.3/fpm/php.ini
 	sudo service php7.3-fpm restart
 fi

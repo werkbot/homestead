@@ -62,7 +62,6 @@ Login:
 ### sendmail
 - Not required for Laravel. Mail configuration is set in the project .env
 - Send test email `echo "test message" | sendmail -v youremail@gmail.com` (this could take several minutes to receive)
-- For SilverStripe, until I find a better solution, change vendor/swiftmailer/swiftmailer/lib/classes/Swift/MailTransport.php constructor default from `-f%s` to `-f %s`
 
 ### apache2
 - Used for 301 redirects
