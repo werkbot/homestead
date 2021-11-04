@@ -3,6 +3,7 @@ ip: "192.168.10.10"
 memory: 2048
 cpus: 2
 provider: virtualbox
+name: 'homestead'
 
 authorize: ~/.ssh/id_rsa.pub
 
