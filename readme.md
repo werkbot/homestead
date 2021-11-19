@@ -103,6 +103,9 @@ Login:
     features:
         - mariadb: true
 
+- SilverStripe sites will typically use php 7.3
+- Laravel apps will typically use php 7.4
+
 ### Start Homestead
 - Run `vagrant up --provision`
 - Run `vagrant ssh`
@@ -112,4 +115,4 @@ Login:
 - Run composer with different versions of PHP `php7.3 /usr/local/bin/composer update`
 
 ### Artisan
-- Run artisan with different versions of PHP `php7.3 artisan migrate`
+- Run artisan with different versions of PHP `php7.4 artisan migrate`
