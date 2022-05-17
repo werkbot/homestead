@@ -73,6 +73,7 @@ if [ -f /home/vagrant/.homestead-features/php ]
 then
     echo "PHP already configured."
 else
+	# PHP 7.3
 	touch /home/vagrant/.homestead-features/php
 	sudo chmod 777 /etc/php/7.3/fpm/php.ini
 	PHP_INI=$(cat /etc/php/7.3/fpm/php.ini)
@@ -85,6 +86,34 @@ else
 	PHP_INI=$(echo "$PHP_INI" | sed 's/mail.add_x_header = Off/mail.add_x_header = On/')
 	sudo echo "$PHP_INI" > /etc/php/7.3/fpm/php.ini
 	sudo service php7.3-fpm restart
+
+	# PHP 7.4
+	touch /home/vagrant/.homestead-features/php
+	sudo chmod 777 /etc/php/7.4/fpm/php.ini
+	PHP_INI=$(cat /etc/php/7.4/fpm/php.ini)
+	PHP_INI=$(echo "$PHP_INI" | sed 's/upload_max_filesize =.*/upload_max_filesize = 0/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/post_max_size =.*/post_max_size = 0/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/max_execution_time =.*/max_execution_time = 0/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/max_input_time =.*/max_input_time = 0/')
+	# sendmail config
+	PHP_INI=$(echo "$PHP_INI" | sed 's/;mail.force_extra_parameters =.*/mail.force_extra_parameters = "-f %s"/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/mail.add_x_header = Off/mail.add_x_header = On/')
+	sudo echo "$PHP_INI" > /etc/php/7.4/fpm/php.ini
+	sudo service php7.4-fpm restart
+
+	# PHP 8.0
+	touch /home/vagrant/.homestead-features/php
+	sudo chmod 777 /etc/php/8.0/fpm/php.ini
+	PHP_INI=$(cat /etc/php/8.0/fpm/php.ini)
+	PHP_INI=$(echo "$PHP_INI" | sed 's/upload_max_filesize =.*/upload_max_filesize = 0/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/post_max_size =.*/post_max_size = 0/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/max_execution_time =.*/max_execution_time = 0/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/max_input_time =.*/max_input_time = 0/')
+	# sendmail config
+	PHP_INI=$(echo "$PHP_INI" | sed 's/;mail.force_extra_parameters =.*/mail.force_extra_parameters = "-f %s"/')
+	PHP_INI=$(echo "$PHP_INI" | sed 's/mail.add_x_header = Off/mail.add_x_header = On/')
+	sudo echo "$PHP_INI" > /etc/php/8.0/fpm/php.ini
+	sudo service php8.0-fpm restart
 fi
 # End PHP
 
