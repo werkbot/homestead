@@ -12,7 +12,6 @@ homesteadJsonPath = confDir + "/Homestead.json"
 afterScriptPath = confDir + "/after.sh"
 customizationScriptPath = confDir + "/user-customizations.sh"
 restartPHPScriptPath = confDir + "/restart-php.sh"
-exportVendorMethodPath = confDir + "/export-vendor-method.sh"
 aliasesPath = confDir + "/aliases"
 
 envConf = YAML::load(File.read(confDir + "/env.yaml"))
@@ -46,10 +45,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     if File.exist? restartPHPScriptPath then
         config.vm.provision "shell", path: restartPHPScriptPath, privileged: false, keep_color: true, run: 'always'
-    end
-
-    if File.exist? exportVendorMethodPath then
-        config.vm.provision "shell", path: exportVendorMethodPath, privileged: false, keep_color: true, run: 'always'
     end
 
     if Vagrant.has_plugin?('vagrant-hostsupdater')

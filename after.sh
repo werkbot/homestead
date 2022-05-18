@@ -10,7 +10,7 @@
 
 
 
-# Check If phpmyadmin Has Been Installed
+# Check if phpmyadmin Has Been Installed
 if [ -f /home/vagrant/.homestead-features/phpmyadmin ]
 then
     echo "phpmyadmin already installed."
@@ -51,7 +51,7 @@ fi
 
 
 
-# Check If Google Chrome Has Been Installed
+# Check if Google Chrome Has Been Installed
 if [ -f /home/vagrant/.homestead-features/google-chrome ]
 then
     echo "Google Chrome already installed."
@@ -68,7 +68,7 @@ fi
 
 
 
-# Check If PHP has been configured
+# Check if PHP has been configured
 if [ -f /home/vagrant/.homestead-features/php ]
 then
     echo "PHP already configured."
@@ -119,7 +119,7 @@ fi
 
 
 
-# Check If NGINX has been configured
+# Check if NGINX has been configured
 if [ -f /home/vagrant/.homestead-features/nginx ]
 then
     echo "NGINX already configured."
@@ -135,7 +135,7 @@ fi
 
 
 
-# Check If sendmail has been installed and configured
+# Check if sendmail has been installed and configured
 if [ -f /home/vagrant/.homestead-features/sendmail ]
 then
     echo "sendmail already configured."
@@ -168,3 +168,14 @@ else
 	sudo systemctl restart nginx
 fi
 # End sendmail
+
+
+# Check if env variables have been configured
+if [ -f /home/vagrant/.homestead-features/envvariables ]
+then
+    echo "sendmail already configured."
+else
+	touch /home/vagrant/.homestead-features/envvariables
+	echo "export SS_VENDOR_METHOD=none" >> /home/vagrant/.profile
+	echo "export SS_VENDOR_METHOD=none" >> /home/vagrant/.bashrc
+fi
