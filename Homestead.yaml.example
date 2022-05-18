@@ -15,6 +15,9 @@ folders:
       to: /home/vagrant/code
 
 sites:
+    - map: phpmyadmin.local
+      to: /home/vagrant/phpmyadmin
+      php: '8.0'
     - map: homestead.test
       to: /home/vagrant/code/public
       php: '7.3'
