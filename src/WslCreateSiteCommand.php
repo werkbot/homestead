@@ -72,7 +72,7 @@ class WslCreateSiteCommand extends Command
         $settings = $this->parseSettingsFromFile($format, []);
 
         foreach ($settings['wsl_sites'] as $key => $site) {
-            $type = isset($site['type']) ? $site['type'] : 'laravel';
+            $type = isset($site['type']) ? $site['type'] : 'werkbot';
             $create_cmd = '';
             $args = [
                 $site['map'],                                 // $1
