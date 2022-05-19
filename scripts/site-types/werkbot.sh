@@ -235,3 +235,6 @@ blockssl="<IfModule mod_ssl.c>
 
 echo "$blockssl" > "/etc/apache2/sites-available/$1-ssl.conf"
 ln -fs "/etc/apache2/sites-available/$1-ssl.conf" "/etc/apache2/sites-enabled/$1-ssl.conf"
+
+sudo service apache2 stop
+sudo service nginx restart
