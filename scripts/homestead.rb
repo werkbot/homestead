@@ -362,7 +362,7 @@ class Homestead
           end
         end
 
-        type = site['type'] ||= 'laravel'
+        type = site['type'] ||= 'werkbot'
         load_balancer = settings['load_balancer'] ||= false
         http_port = load_balancer ? '8111' : '80'
         https_port = load_balancer ? '8112' : '443'

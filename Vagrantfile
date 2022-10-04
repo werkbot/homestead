@@ -11,7 +11,10 @@ homesteadYamlPath = confDir + "/Homestead.yaml"
 homesteadJsonPath = confDir + "/Homestead.json"
 afterScriptPath = confDir + "/after.sh"
 customizationScriptPath = confDir + "/user-customizations.sh"
+restartPHPScriptPath = confDir + "/restart-php.sh"
 aliasesPath = confDir + "/aliases"
+
+envConf = YAML::load(File.read(confDir + "/env.yaml"))
 
 require File.expand_path(File.dirname(__FILE__) + '/scripts/homestead.rb')
 
@@ -37,11 +40,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     Homestead.configure(config, settings)
 
     if File.exist? afterScriptPath then
-        config.vm.provision "Run after.sh", type: "shell", path: afterScriptPath, privileged: false, keep_color: true
+        config.vm.provision "Run after.sh", type: "shell", path: afterScriptPath, privileged: false, keep_color: true, env: {'MAILUSER' => envConf['MAILUSER'], 'MAILPASSWORD' => envConf['MAILPASSWORD']}
     end
 
     if File.exist? customizationScriptPath then
-        config.vm.provision "Run customize script", type: "shell", path: customizationScriptPath, privileged: false, keep_color: true
+        config.vm.provision "Run customize script", type: "shell", path: customizationScriptPath, privileged: false, keep_color: true, run: 'always'
     end
 
     if Vagrant.has_plugin?('vagrant-hostsupdater')
