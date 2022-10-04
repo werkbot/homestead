@@ -3,6 +3,7 @@ ip: "192.168.10.10"
 memory: 2048
 cpus: 2
 provider: virtualbox
+name: 'homestead'
 
 authorize: ~/.ssh/id_rsa.pub
 
@@ -14,9 +15,12 @@ folders:
       to: /home/vagrant/code
 
 sites:
+    - map: phpmyadmin.local
+      to: /home/vagrant/phpmyadmin
+      php: '8.0'
     - map: homestead.test
       to: /home/vagrant/code/public
-      php: 7.3
+      php: '7.3'
 
 databases:
     - LV_example

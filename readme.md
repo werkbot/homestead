@@ -59,6 +59,33 @@ Login:
 - user: homestead
 - password: secret
 
+### sendmail
+- Not required for Laravel. Mail configuration is set in the project .env
+- Send test email `echo "test message" | sendmail -v youremail@gmail.com` (this could take several minutes to receive)
+
+### apache2
+- Used for 301 redirects
+- Disable nginx `sudo systemctl stop nginx`
+- `sudo vi /etc/apache2/apache2.conf`
+- Update `<Directory />` block
+
+        <Directory />
+                Options FollowSymLinks
+                AllowOverride All
+                Require all granted
+        </Directory>
+
+- Add site conf `sudo vi /etc/apache2/sites-available/sitename.local.conf`
+
+        <VirtualHost *:80>
+            ServerAdmin email@email.com
+            DocumentRoot /home/vagrant/sitename/public
+            ServerName sitename.local
+        </VirtualHost>
+
+- Add symlink to sites-enabled `sudo ln -s /etc/apache2/sites-available/sitename.local.conf /etc/apache2/sites-enabled/sitename.local.conf`
+- Restart apache `sudo systemctl restart apache2`
+
 ## Config
 - Setup a key `ssh-keygen -t rsa -C "you@homestead"`
 
@@ -70,80 +97,22 @@ Login:
     sites:
         - map: sitename.local
           to: /home/vagrant/sitename/public
-          php: '8.0'
+          php: '7.3'
     databases:
         - sitename
     features:
         - mariadb: true
 
+- SilverStripe sites will typically use php 7.3
+- Laravel apps will typically use php 7.4
+
 ### Start Homestead
 - Run `vagrant up --provision`
 - Run `vagrant ssh`
-
-### PHP
-- Run `sudo vi /etc/php/7.3/fpm/php.ini`
-- Change following values to 0:
-
-        upload_max_filesize = 0
-        post_max_size = 0
-        max_execution_time = 0
-        max_input_time = 0
-
-### Nginx
-- Run `sudo vi /etc/nginx/nginx.conf`
-- Add `client_max_body_size 0;` in http brackets
-- Run `sudo systemctl restart nginx`
-
-### Disable xdebug (causes 502 error)
-- Run `sudo vi /etc/php/7.3/mods-available/xdebug.ini`
-- Add a `;` before each line
-- Run `sudo systemctl restart nginx`
-- Run `sudo service php7.3-fpm restart`
-
-### Sendmail
-- Run `sudo apt-get install sendmail`
-- Run `sudo sendmailconfig` and answer yes to all
-- Run `sudo mkdir /etc/mail/authinfo/`
-- Run `cd /etc/mail/authinfo/`
-- Run `sudo vi gmail-auth`
-- Paste and edit `AuthInfo: "U:root" "I:developer@werkbot.com" "P:PASSWORD"`
-- Run `sudo makemap hash gmail-auth < gmail-auth`
-- Run `cd /` to navigate back
-- Run `sudo vi /etc/mail/sendmail.mc`
-- Paste the following right above the MAILER definitions
-
-        define(`SMART_HOST',`[smtp.gmail.com]')dnl
-        define(`RELAY_MAILER_ARGS', `TCP $h 587')dnl
-        define(`ESMTP_MAILER_ARGS', `TCP $h 587')dnl
-        define(`confAUTH_OPTIONS', `A p')dnl
-        TRUST_AUTH_MECH(`EXTERNAL DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl
-        define(`confAUTH_MECHANISMS', `EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl
-        FEATURE(`authinfo',`hash -o /etc/mail/authinfo/gmail-auth.db')dnl
-
-- Run `sudo make -C /etc/mail`
-- Run `sudo /etc/init.d/sendmail reload`
-- Send test email `echo "test message" | sendmail -v youremail@gmail.com`
-- Open the php.ini file for your project's php version. e.g. `sudo vi /etc/php/7.4/fpm/php.ini`
-- Set `SMTP = smtp.gmail.com`
-- Set `sendmail_from = developer@werkbot.com`
-- Set `sendmail_path = /usr/sbin/sendmail`
-- Run `sudo vi /etc/hosts`
-- Change:
-
-        127.0.0.1       localhost
-        127.0.1.1       homestead       homestead
-
-- To:
-
-        127.0.0.1       localhost.localdomain localhost homestead
-        127.0.1.1       homestead       homestead
-
-- Run `sudo systemctl restart nginx`
-- For SilverStripe, until I find a better solution, change vendor/swiftmailer/swiftmailer/lib/classes/Swift/MailTransport.php constructor default from `-f%s` to `-f %s`
 
 ## PHP Versions
 ### Composer
 - Run composer with different versions of PHP `php7.3 /usr/local/bin/composer update`
 
 ### Artisan
-- Run artisan with different versions of PHP `php7.3 artisan migrate`
+- Run artisan with different versions of PHP `php7.4 artisan migrate`
