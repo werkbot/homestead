@@ -127,7 +127,7 @@ else
 	touch /home/vagrant/.homestead-features/nginx
 	sudo chmod 777 /etc/nginx/nginx.conf
 	NGINX_CONF=$(cat /etc/nginx/nginx.conf)
-	NGINX_CONF=$(echo "$NGINX_CONF" | sed 's/http {/http {\nclient_max_body_size 0;/')
+	NGINX_CONF=$(echo "$NGINX_CONF" | sed 's/client_max_body_size 100M/client_max_body_size 0/')
 	sudo echo "$NGINX_CONF" > /etc/nginx/nginx.conf
 	sudo systemctl restart nginx
 fi
